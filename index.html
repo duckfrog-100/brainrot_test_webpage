@@ -7,17 +7,10 @@
   <meta name="description" content="1분 안에 초성/알파벳 단어를 최대한 많이 맞히는 두뇌 테스트 게임" />
   <title>1분 단어 두뇌 테스트</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
-    :root {
-      color-scheme: dark;
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
+    :root { color-scheme: dark; --safe-bottom: env(safe-area-inset-bottom, 0px); }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
       min-height: 100dvh;
       margin: 0;
@@ -28,81 +21,18 @@
         linear-gradient(145deg, #10131f 0%, #181923 48%, #10131f 100%);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-
-    .mission-glow {
-      text-shadow: 0 0 42px rgba(45, 212, 191, 0.55), 0 8px 0 rgba(255, 255, 255, 0.08);
-    }
-
-    .glass {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.28);
-      backdrop-filter: blur(22px);
-    }
-
-    .shake {
-      animation: shake 0.28s cubic-bezier(.36,.07,.19,.97) both;
-    }
-
-    @keyframes shake {
-      10%, 90% { transform: translateX(-2px); }
-      20%, 80% { transform: translateX(4px); }
-      30%, 50%, 70% { transform: translateX(-8px); }
-      40%, 60% { transform: translateX(8px); }
-    }
-
-    .pulse-pop {
-      animation: pulse-pop 0.22s ease-out;
-    }
-
-    @keyframes pulse-pop {
-      0% { transform: scale(1); }
-      55% { transform: scale(1.14); }
-      100% { transform: scale(1); }
-    }
-
-    .ad-slot {
-      display: grid;
-      place-items: center;
-      color: rgba(255, 255, 255, 0.56);
-      border: 1px dashed rgba(255, 255, 255, 0.26);
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
-    }
-
-    .goal-card {
-      position: relative;
-      overflow: hidden;
-      border-color: rgba(251, 191, 36, 0.34);
-      background:
-        linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(20, 184, 166, 0.12), rgba(244, 63, 94, 0.13)),
-        rgba(255, 255, 255, 0.08);
-      box-shadow: 0 20px 70px rgba(251, 191, 36, 0.16), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
-    }
-
-    .goal-card::before {
-      content: "";
-      position: absolute;
-      inset: -45% auto auto -20%;
-      width: 70%;
-      aspect-ratio: 1;
-      background: rgba(251, 191, 36, 0.18);
-      filter: blur(28px);
-      transform: rotate(18deg);
-    }
-
-    .danger-pulse {
-      animation: danger-pulse 1.5s ease-in-out infinite;
-    }
-
-    @keyframes danger-pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); }
-      50% { box-shadow: 0 0 0 8px rgba(251, 191, 36, 0); }
-    }
-
-    .bottom-input-shell {
-      padding-bottom: calc(0.9rem + var(--safe-bottom));
-    }
+    .mission-glow { text-shadow: 0 0 42px rgba(45, 212, 191, 0.55), 0 8px 0 rgba(255, 255, 255, 0.08); }
+    .glass { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 20px 70px rgba(0, 0, 0, 0.28); backdrop-filter: blur(22px); }
+    .shake { animation: shake 0.28s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes shake { 10%, 90% { transform: translateX(-2px); } 20%, 80% { transform: translateX(4px); } 30%, 50%, 70% { transform: translateX(-8px); } 40%, 60% { transform: translateX(8px); } }
+    .pulse-pop { animation: pulse-pop 0.22s ease-out; }
+    @keyframes pulse-pop { 0% { transform: scale(1); } 55% { transform: scale(1.14); } 100% { transform: scale(1); } }
+    .ad-slot { display: grid; place-items: center; color: rgba(255, 255, 255, 0.56); border: 1px dashed rgba(255, 255, 255, 0.26); background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)); }
+    .goal-card { position: relative; overflow: hidden; border-color: rgba(251, 191, 36, 0.34); background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(20, 184, 166, 0.12), rgba(244, 63, 94, 0.13)), rgba(255, 255, 255, 0.08); box-shadow: 0 20px 70px rgba(251, 191, 36, 0.16), inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
+    .goal-card::before { content: ""; position: absolute; inset: -45% auto auto -20%; width: 70%; aspect-ratio: 1; background: rgba(251, 191, 36, 0.18); filter: blur(28px); transform: rotate(18deg); }
+    .danger-pulse { animation: danger-pulse 1.5s ease-in-out infinite; }
+    @keyframes danger-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); } 50% { box-shadow: 0 0 0 8px rgba(251, 191, 36, 0); } }
+    .bottom-input-shell { padding-bottom: calc(0.9rem + var(--safe-bottom)); }
   </style>
 </head>
 <body class="text-white">
@@ -161,20 +91,8 @@
 
   <form id="answerForm" class="bottom-input-shell fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-[#10131f]/92 px-4 pt-3 backdrop-blur-xl sm:px-6">
     <div class="mx-auto flex max-w-3xl items-center gap-3">
-      <input
-        id="answerInput"
-        type="text"
-        inputmode="text"
-        autocomplete="off"
-        autocapitalize="none"
-        spellcheck="false"
-        disabled
-        class="h-14 min-w-0 flex-1 rounded-2xl border border-white/14 bg-white px-5 text-lg font-black text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-teal-300 focus:ring-4 focus:ring-teal-300/25 disabled:cursor-not-allowed disabled:bg-white/55 sm:h-16 sm:text-xl"
-        placeholder="시작 후 단어 입력"
-      />
-      <button id="submitBtn" type="submit" disabled class="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-pink-400 text-xl font-black text-slate-950 transition active:scale-95 disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-white/35 sm:h-16 sm:w-16" aria-label="submit answer">
-        ↵
-      </button>
+      <input id="answerInput" type="text" inputmode="text" autocomplete="off" autocapitalize="none" spellcheck="false" disabled class="h-14 min-w-0 flex-1 rounded-2xl border border-white/14 bg-white px-5 text-lg font-black text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-teal-300 focus:ring-4 focus:ring-teal-300/25 disabled:cursor-not-allowed disabled:bg-white/55 sm:h-16 sm:text-xl" placeholder="시작 후 단어 입력" />
+      <button id="submitBtn" type="submit" disabled class="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-pink-400 text-xl font-black text-slate-950 transition active:scale-95 disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-white/35 sm:h-16 sm:w-16" aria-label="submit answer">↵</button>
     </div>
   </form>
 
@@ -186,9 +104,7 @@
       <p id="resultTier" class="mt-2 text-lg font-black text-amber-200"></p>
       <p id="resultMessage" class="mt-3 text-base font-bold leading-relaxed text-white/86"></p>
       <p id="resultGuide" class="mt-3 text-sm font-semibold leading-relaxed text-white/64"></p>
-      <aside class="ad-slot mx-auto my-5 aspect-square w-full max-w-[280px] rounded-2xl text-sm font-bold" data-ad-slot="result-modal">
-        광고 배너 영역 300x250
-      </aside>
+      <aside class="ad-slot mx-auto my-5 aspect-square w-full max-w-[280px] rounded-2xl text-sm font-bold" data-ad-slot="result-modal">광고 배너 영역 300x250</aside>
       <div class="grid gap-3">
         <button id="shareBtn" type="button" class="rounded-2xl bg-yellow-300 px-5 py-4 font-black text-slate-950 transition active:scale-95">카카오톡으로 결과 공유</button>
         <button id="copyBtn" type="button" class="rounded-2xl bg-white px-5 py-4 font-black text-slate-950 transition active:scale-95">링크 복사하기</button>
@@ -198,170 +114,48 @@
   </div>
 
   <script>
-    const WORD_DATA = {
+    const DATA_FILES = {
+      korCsv: "chosung_nouns_perfect.csv",
+      korXlsx: "국립국어원_초성별_단어_진짜최종.xlsx",
+      engXlsx: "영어_WordNet_명사_단어장.xlsx"
+    };
+
+    const KOR_INITIALS = ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
+
+    const FALLBACK_WORD_DATA = {
       kor: {
-        "ㅇ": [
-          "아버지", "어머니", "우산", "아기", "오이", "아이", "오리", "우유", "의자", "이불",
-          "이마", "입술", "얼굴", "어깨", "양말", "운동화", "안경", "약국", "은행", "우체국",
-          "여행", "음악", "영화", "연필", "일기", "알람", "아침", "오후", "오늘", "어제",
-          "여름", "얼음", "온도", "우주", "은하", "위성", "안개", "이슬", "언덕", "연못"
-        ],
-        "ㄱ": [
-          "가방", "가위", "가족", "가게", "가지", "감자", "고구마", "고양이", "강아지", "기차",
-          "기름", "기분", "기억", "기록", "기회", "기계", "거울", "건물", "공원", "공책",
-          "교실", "교사", "국수", "구름", "그림", "금요일", "김치", "깃발", "꿈", "꽃",
-          "껌", "꼬리", "까치", "깨", "끝", "길", "계단", "경기", "계절", "곡식"
-        ],
-        "ㅅ": [
-          "사과", "사람", "사전", "사진", "사탕", "산책", "상자", "새벽", "생각", "선물",
-          "선생", "설탕", "성공", "세계", "소금", "소나무", "소리", "소설", "손가락", "송아지",
-          "수건", "수박", "수업", "숟가락", "습관", "시간", "시계", "시금치", "신문", "식당",
-          "신발", "실내", "심장", "쌀", "쓰기", "씨앗", "싸움", "썰매", "쑥", "시장"
-        ]
+        "ㅇ": ["아버지", "어머니", "우산", "아기", "오이", "아이", "오리", "우유", "의자", "이불", "여행", "음악", "영화", "연필", "일기", "아침", "여름", "얼음", "우주", "연못"],
+        "ㄱ": ["가방", "가위", "가족", "가게", "가지", "감자", "고양이", "강아지", "기차", "거울", "건물", "공원", "공책", "국수", "구름", "그림", "김치", "꿈", "꽃", "계절"],
+        "ㅅ": ["사과", "사람", "사전", "사진", "사탕", "산책", "상자", "생각", "선물", "설탕", "소금", "소리", "소설", "수건", "수박", "시간", "시계", "신문", "식당", "신발"]
       },
       eng: {
-        f: [
-          "face", "fact", "fade", "fail", "fair", "faith", "fall", "fame", "family", "farm",
-          "fast", "father", "fault", "favor", "fear", "feast", "feel", "fence", "field", "fight",
-          "file", "film", "final", "finger", "fire", "fish", "flag", "flame", "flash", "floor",
-          "flower", "focus", "food", "forest", "fork", "form", "frame", "fresh", "friend", "fruit"
-        ],
-        a: [
-          "able", "about", "above", "absent", "accept", "access", "actor", "acute", "adapt", "adult",
-          "after", "again", "agent", "agree", "ahead", "alarm", "album", "alive", "allow", "almost",
-          "alone", "along", "alpha", "always", "angel", "angle", "animal", "answer", "apple", "apply",
-          "area", "argue", "arise", "armor", "array", "arrow", "artist", "aspect", "asset", "audio"
-        ],
-        s: [
-          "safe", "sail", "salad", "salt", "same", "sample", "sand", "save", "scale", "scene",
-          "school", "score", "screen", "search", "season", "second", "secret", "sense", "series", "serve",
-          "shadow", "shape", "share", "sharp", "sheet", "shield", "shine", "shirt", "shock", "short",
-          "signal", "simple", "skill", "sleep", "smart", "smile", "sound", "space", "spring", "story"
-        ]
+        f: ["face", "fact", "fail", "fair", "fall", "family", "farm", "father", "field", "fight", "file", "film", "finger", "fire", "fish", "flag", "floor", "flower", "food", "friend"],
+        a: ["able", "about", "above", "actor", "adult", "after", "agent", "alarm", "album", "alive", "alone", "angel", "animal", "answer", "apple", "area", "arrow", "artist", "asset", "audio"],
+        s: ["safe", "salad", "salt", "sand", "school", "score", "screen", "season", "secret", "sense", "shadow", "shape", "share", "shirt", "skill", "sleep", "smile", "sound", "space", "story"]
       }
     };
 
-    const MISSIONS = {
-      kor: ["ㅇ", "ㄱ", "ㅅ"],
-      eng: ["f", "a", "s"]
-    };
+    let WORD_DATA = structuredClone(FALLBACK_WORD_DATA);
+    let MISSIONS = buildMissions(WORD_DATA);
 
     const RESULT_TIERS = {
       kor: [
-        {
-          min: 26,
-          badge: "🚀",
-          name: "SUPER GREEN · 갓벽한 브레인 스프린터",
-          hook: "뇌 활성도 최상위 등급! 당신의 뇌는 지금 가장 젊습니다.",
-          guide: "1분이라는 짧은 시간 동안 폭발적인 인출 속도를 보여주셨습니다. 평소 독서나 깊은 사고를 자주 하시는 분이 분명하네요."
-        },
-        {
-          min: 20,
-          badge: "🎉",
-          name: "GREEN · 정상 (건강함)",
-          hook: "전두엽과 측두엽의 완벽한 티키타카! 매우 건강합니다.",
-          guide: "뇌에 저장된 정보를 빠르고 정확하게 꺼내 쓰고 계시네요. 정보 탐색과 집행 기능이 모두 안정적인 상태입니다."
-        },
-        {
-          min: 16,
-          badge: "⚡",
-          name: "YELLOW · 주의 (로딩 중)",
-          hook: "단어는 머릿속에 맴도는데... 전두엽 로딩 중!",
-          guide: "어휘력은 충분하지만, 뇌에서 꺼내는 속도가 살짝 지연되고 있어요. 일상 대화에서 익숙한 단어 대신 새로운 표현을 섞어 써보세요."
-        },
-        {
-          min: 0,
-          badge: "⚠️",
-          name: "RED · 경고 (위험)",
-          hook: "혹시 브레인 롯(Brain Rot)? 뇌의 출력이 잠시 녹슨 상태!",
-          guide: "뇌세포 노화라기보다는 스마트폰이나 숏폼 중독으로 뇌의 인출 기능이 둔해졌을 가능성이 큽니다. 지금 바로 책을 펼치거나 소리 내어 읽어보세요."
-        }
+        { min: 26, badge: "🚀", name: "SUPER GREEN · 갓벽한 브레인 스프린터", hook: "뇌 활성도 최상위 등급! 당신의 뇌는 지금 가장 젊습니다.", guide: "1분이라는 짧은 시간 동안 폭발적인 인출 속도를 보여주셨습니다. 평소 독서나 깊은 사고를 자주 하시는 분이 분명하네요." },
+        { min: 20, badge: "🎉", name: "GREEN · 정상 (건강함)", hook: "전두엽과 측두엽의 완벽한 티키타카! 매우 건강합니다.", guide: "뇌에 저장된 정보를 빠르고 정확하게 꺼내 쓰고 계시네요. 정보 탐색과 집행 기능이 모두 안정적인 상태입니다." },
+        { min: 16, badge: "⚡", name: "YELLOW · 주의 (로딩 중)", hook: "단어는 머릿속에 맴도는데... 전두엽 로딩 중!", guide: "어휘력은 충분하지만, 뇌에서 꺼내는 속도가 살짝 지연되고 있어요. 일상 대화에서 익숙한 단어 대신 새로운 표현을 섞어 써보세요." },
+        { min: 0, badge: "⚠️", name: "RED · 경고 (위험)", hook: "혹시 브레인 롯(Brain Rot)? 뇌의 출력이 잠시 녹슨 상태!", guide: "뇌세포 노화라기보다는 스마트폰이나 숏폼 중독으로 뇌의 인출 기능이 둔해졌을 가능성이 큽니다. 지금 바로 책을 펼치거나 소리 내어 읽어보세요." }
       ],
       eng: [
-        {
-          min: 23,
-          badge: "🚀",
-          name: "SUPER GREEN · Elite Brain Sprinter",
-          hook: "Top-tier cognitive speed! Your brain is at its absolute prime.",
-          guide: "You showed explosive word-retrieval speed. It is clear that you frequently engage in reading or deep intellectual activities. Excellent job!"
-        },
-        {
-          min: 17,
-          badge: "🎉",
-          name: "GREEN · Healthy & Sharp",
-          hook: "Perfect harmony between your frontal & temporal lobes!",
-          guide: "Your brain accesses and retrieves stored information with impressive agility. Your executive functions are stable and healthy."
-        },
-        {
-          min: 13,
-          badge: "⚡",
-          name: "YELLOW · Brain Buffering",
-          hook: "Word on the tip of your tongue? Frontal lobe is buffering!",
-          guide: "Your vocabulary is fine, but the output speed is slightly lagging. Try introducing new words into daily conversations to boost processing speed."
-        },
-        {
-          min: 0,
-          badge: "⚠️",
-          name: "RED · Brain Rot Alert",
-          hook: "Uh-oh... Brain Rot Alert? Your brain's output is temporarily rusty!",
-          guide: "Scoring under 13 might mean doomscrolling or short-form content has slowed down recall. Turn off the screen, open a book, and wake your brain up!"
-        }
+        { min: 23, badge: "🚀", name: "SUPER GREEN · Elite Brain Sprinter", hook: "Top-tier cognitive speed! Your brain is at its absolute prime.", guide: "You showed explosive word-retrieval speed. It is clear that you frequently engage in reading or deep intellectual activities. Excellent job!" },
+        { min: 17, badge: "🎉", name: "GREEN · Healthy & Sharp", hook: "Perfect harmony between your frontal & temporal lobes!", guide: "Your brain accesses and retrieves stored information with impressive agility. Your executive functions are stable and healthy." },
+        { min: 13, badge: "⚡", name: "YELLOW · Brain Buffering", hook: "Word on the tip of your tongue? Frontal lobe is buffering!", guide: "Your vocabulary is fine, but the output speed is slightly lagging. Try introducing new words into daily conversations to boost processing speed." },
+        { min: 0, badge: "⚠️", name: "RED · Brain Rot Alert", hook: "Uh-oh... Brain Rot Alert? Your brain's output is temporarily rusty!", guide: "Scoring under 13 might mean doomscrolling or short-form content has slowed down recall. Turn off the screen, open a book, and wake your brain up!" }
       ]
     };
 
     const UI_TEXT = {
-      kor: {
-        htmlLang: "ko",
-        title: "1분 초성 단어 두뇌 테스트",
-        eyebrow: "60-second brain sprint",
-        missionLabel: "Current mission",
-        hint: "{mission}으로 시작하는 명사를 최대한 빠르게 입력하세요.",
-        timerLabel: "Time",
-        scoreLabel: "Score",
-        goalLabel: "GOAL (권장)",
-        goalWarning: "건강한 성인의 경우 1분 동안 보통 20~25개 이상의 단어를 떠올리는 것이 정상입니다.",
-        start: "시작하기",
-        restart: "다시 시작",
-        placeholderReady: "시작 후 단어 입력",
-        placeholderPlay: "단어 입력 후 Enter",
-        correct: "좋아요. 바로 다음 단어!",
-        wrong: "사전에 없는 단어예요.",
-        duplicate: "이미 맞춘 단어예요.",
-        idle: "시작 버튼을 누르면 60초가 흐릅니다.",
-        share: "카카오톡으로 결과 공유",
-        copy: "링크 복사하기",
-        retry: "다시 도전",
-        resultTitle: "결과",
-        copied: "링크를 복사했습니다.",
-        success: "🎉 천재적인 두뇌입니다! 당신의 놀라운 집중력을 친구들에게 자랑해보세요.",
-        fail: "⚠️ 경고: 현재 뇌 기능이 일시적으로 저하되어 있을 가능성이 있습니다! 절대적인 휴식이 필요합니다."
-      },
-      eng: {
-        htmlLang: "en",
-        title: "1-Minute Alphabet Word Brain Test",
-        eyebrow: "60-second brain sprint",
-        missionLabel: "Current mission",
-        hint: "Type words starting with '{mission}'. Based on the F-A-S Test.",
-        timerLabel: "Time",
-        scoreLabel: "Score",
-        goalLabel: "GOAL (Recommended)",
-        goalWarning: "F-A-S Test inspired target: 17+ words in 1 minute reflects a healthy recall sprint.",
-        start: "Start",
-        restart: "Restart",
-        placeholderReady: "Start, then type words",
-        placeholderPlay: "Type a word and press Enter",
-        correct: "Nice. Next word!",
-        wrong: "Not in the word list.",
-        duplicate: "Already counted.",
-        idle: "Press start. You get 60 seconds.",
-        share: "Share Result",
-        copy: "Copy Link",
-        retry: "Try Again",
-        resultTitle: "Result",
-        copied: "Link copied.",
-        success: "🎉 Genius focus. Brag about your score before your friends catch up.",
-        fail: "⚠️ Warning: Your brain function may be temporarily underclocked. Emergency rest is strongly recommended."
-      }
+      kor: { htmlLang: "ko", title: "1분 초성 단어 두뇌 테스트", eyebrow: "60-second brain sprint", missionLabel: "Current mission", hint: "{mission}으로 시작하는 명사를 최대한 빠르게 입력하세요.", timerLabel: "Time", scoreLabel: "Score", goalLabel: "GOAL (권장)", goalWarning: "건강한 성인의 경우 1분 동안 보통 20~25개 이상의 단어를 떠올리는 것이 정상입니다.", start: "시작하기", restart: "다시 시작", loading: "단어장 불러오는 중...", placeholderReady: "시작 후 단어 입력", placeholderPlay: "단어 입력 후 Enter", correct: "좋아요. 바로 다음 단어!", wrong: "사전에 없는 단어예요.", duplicate: "이미 맞춘 단어예요.", idle: "시작 버튼을 누르면 60초가 흐릅니다.", dataLoaded: "단어장을 불러왔습니다.", dataFallback: "일부 단어장 파일을 읽지 못해 기본 단어장을 함께 사용합니다.", share: "카카오톡으로 결과 공유", copy: "링크 복사하기", retry: "다시 도전", resultTitle: "결과", copied: "링크를 복사했습니다.", success: "🎉 천재적인 두뇌입니다! 당신의 놀라운 집중력을 친구들에게 자랑해보세요.", fail: "⚠️ 경고: 현재 뇌 기능이 일시적으로 저하되어 있을 가능성이 있습니다! 절대적인 휴식이 필요합니다." },
+      eng: { htmlLang: "en", title: "1-Minute Alphabet Word Brain Test", eyebrow: "60-second brain sprint", missionLabel: "Current mission", hint: "Type words starting with '{mission}'. Based on the F-A-S Test.", timerLabel: "Time", scoreLabel: "Score", goalLabel: "GOAL (Recommended)", goalWarning: "F-A-S Test inspired target: 17+ words in 1 minute reflects a healthy recall sprint.", start: "Start", restart: "Restart", loading: "Loading word dataset...", placeholderReady: "Start, then type words", placeholderPlay: "Type a word and press Enter", correct: "Nice. Next word!", wrong: "Not in the word list.", duplicate: "Already counted.", idle: "Press start. You get 60 seconds.", dataLoaded: "Word datasets loaded.", dataFallback: "Some dataset files could not be read, so fallback words are also enabled.", share: "Share Result", copy: "Copy Link", retry: "Try Again", resultTitle: "Result", copied: "Link copied.", success: "🎉 Genius focus. Brag about your score before your friends catch up.", fail: "⚠️ Warning: Your brain function may be temporarily underclocked. Emergency rest is strongly recommended." }
     };
 
     const state = {
@@ -369,46 +163,16 @@
       timeLeft: 60,
       score: 0,
       running: false,
+      dataReady: false,
       timerId: null,
       currentMission: null,
       answered: new Set(),
-      wordSets: {
-        kor: Object.fromEntries(Object.entries(WORD_DATA.kor).map(([mission, words]) => [mission, new Set(words)])),
-        eng: Object.fromEntries(Object.entries(WORD_DATA.eng).map(([mission, words]) => [mission, new Set(words)]))
-      }
+      wordSets: buildWordSets(WORD_DATA)
     };
 
     const $ = (id) => document.getElementById(id);
     const nodes = {
-      korBtn: $("korBtn"),
-      engBtn: $("engBtn"),
-      eyebrow: $("eyebrow"),
-      title: $("title"),
-      missionLabel: $("missionLabel"),
-      missionLetter: $("missionLetter"),
-      hint: $("hint"),
-      timerLabel: $("timerLabel"),
-      scoreLabel: $("scoreLabel"),
-      goalLabel: $("goalLabel"),
-      goalCount: $("goalCount"),
-      goalWarning: $("goalWarning"),
-      timer: $("timer"),
-      score: $("score"),
-      startBtn: $("startBtn"),
-      feedback: $("feedback"),
-      answerForm: $("answerForm"),
-      answerInput: $("answerInput"),
-      submitBtn: $("submitBtn"),
-      resultModal: $("resultModal"),
-      resultBadge: $("resultBadge"),
-      resultTitle: $("resultTitle"),
-      resultScore: $("resultScore"),
-      resultTier: $("resultTier"),
-      resultMessage: $("resultMessage"),
-      resultGuide: $("resultGuide"),
-      shareBtn: $("shareBtn"),
-      copyBtn: $("copyBtn"),
-      retryBtn: $("retryBtn")
+      korBtn: $("korBtn"), engBtn: $("engBtn"), eyebrow: $("eyebrow"), title: $("title"), missionLabel: $("missionLabel"), missionLetter: $("missionLetter"), hint: $("hint"), timerLabel: $("timerLabel"), scoreLabel: $("scoreLabel"), goalLabel: $("goalLabel"), goalCount: $("goalCount"), goalWarning: $("goalWarning"), timer: $("timer"), score: $("score"), startBtn: $("startBtn"), feedback: $("feedback"), answerForm: $("answerForm"), answerInput: $("answerInput"), submitBtn: $("submitBtn"), resultModal: $("resultModal"), resultBadge: $("resultBadge"), resultTitle: $("resultTitle"), resultScore: $("resultScore"), resultTier: $("resultTier"), resultMessage: $("resultMessage"), resultGuide: $("resultGuide"), shareBtn: $("shareBtn"), copyBtn: $("copyBtn"), retryBtn: $("retryBtn")
     };
 
     function getInitialLanguage() {
@@ -416,36 +180,125 @@
       return params.get("lang") === "eng" ? "eng" : "kor";
     }
 
+    function getKorInitial(word) {
+      const code = word.charCodeAt(0) - 44032;
+      if (code < 0 || code > 11171) return "";
+      return KOR_INITIALS[Math.floor(code / 588)];
+    }
+
+    function cleanWord(value, lang) {
+      const raw = String(value ?? "").trim();
+      if (!raw || /^(word|words|noun|nouns|단어|명사|초성|chosung|alphabet|letter)$/i.test(raw)) return "";
+      if (lang === "eng") {
+        const word = raw.toLowerCase().replace(/[^a-z'-]/g, "").replace(/^[-']+|[-']+$/g, "");
+        return /^[a-z][a-z'-]{1,}$/.test(word) ? word : "";
+      }
+      const word = raw.replace(/\s+/g, "");
+      return /^[가-힣]{2,}$/.test(word) ? word : "";
+    }
+
+    function addWord(target, lang, word, initial = null) {
+      const clean = cleanWord(word, lang);
+      if (!clean) return;
+      const key = lang === "eng" ? clean[0] : (initial || getKorInitial(clean));
+      if (!key) return;
+      if (!target[key]) target[key] = [];
+      target[key].push(clean);
+    }
+
+    function dedupeGroups(groups) {
+      return Object.fromEntries(Object.entries(groups).map(([key, words]) => [key, [...new Set(words)].sort((a, b) => a.localeCompare(b))]));
+    }
+
+    function buildWordSets(data) {
+      return {
+        kor: Object.fromEntries(Object.entries(data.kor).map(([mission, words]) => [mission, new Set(words)])),
+        eng: Object.fromEntries(Object.entries(data.eng).map(([mission, words]) => [mission, new Set(words)]))
+      };
+    }
+
+    function buildMissions(data) {
+      const kor = Object.keys(data.kor).filter((key) => data.kor[key].length >= 5);
+      const engKeys = Object.keys(data.eng).filter((key) => data.eng[key].length >= 5);
+      const fas = ["f", "a", "s"].filter((key) => engKeys.includes(key));
+      return { kor: kor.length ? kor : ["ㅇ", "ㄱ", "ㅅ"], eng: fas.length === 3 ? fas : (engKeys.length ? engKeys : ["f", "a", "s"]) };
+    }
+
+    function parseCsv(text) {
+      const groups = {};
+      text.replace(/^\uFEFF/, "").split(/\r?\n/).slice(1).forEach((line) => {
+        if (!line.trim()) return;
+        const [initial, ...rest] = line.split(",");
+        addWord(groups, "kor", rest.join(","), initial.trim());
+      });
+      return dedupeGroups(groups);
+    }
+
+    async function readTextFile(path) {
+      const response = await fetch(encodeURI(path));
+      if (!response.ok) throw new Error(`${path} ${response.status}`);
+      return response.text();
+    }
+
+    async function readXlsxFile(path, lang) {
+      if (!window.XLSX) throw new Error("SheetJS is not loaded");
+      const response = await fetch(encodeURI(path));
+      if (!response.ok) throw new Error(`${path} ${response.status}`);
+      const buffer = await response.arrayBuffer();
+      const workbook = XLSX.read(buffer, { type: "array" });
+      const groups = {};
+      workbook.SheetNames.forEach((sheetName) => {
+        const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1, raw: false, blankrows: false });
+        rows.flat().forEach((cell) => addWord(groups, lang, cell));
+      });
+      return dedupeGroups(groups);
+    }
+
+    function mergeWordData(base, addition, lang) {
+      Object.entries(addition).forEach(([key, words]) => {
+        if (!base[lang][key]) base[lang][key] = [];
+        base[lang][key].push(...words);
+      });
+      base[lang] = dedupeGroups(base[lang]);
+    }
+
+    async function loadWordData() {
+      const loaded = structuredClone(FALLBACK_WORD_DATA);
+      let loadedAny = false;
+      let failedAny = false;
+
+      const jobs = [
+        readTextFile(DATA_FILES.korCsv).then((text) => { mergeWordData(loaded, parseCsv(text), "kor"); loadedAny = true; }).catch(() => { failedAny = true; }),
+        readXlsxFile(DATA_FILES.korXlsx, "kor").then((groups) => { mergeWordData(loaded, groups, "kor"); loadedAny = true; }).catch(() => { failedAny = true; }),
+        readXlsxFile(DATA_FILES.engXlsx, "eng").then((groups) => { mergeWordData(loaded, groups, "eng"); loadedAny = true; }).catch(() => { failedAny = true; })
+      ];
+
+      await Promise.allSettled(jobs);
+      WORD_DATA = loaded;
+      MISSIONS = buildMissions(WORD_DATA);
+      state.wordSets = buildWordSets(WORD_DATA);
+      state.dataReady = true;
+      resetGame(false);
+      nodes.feedback.textContent = loadedAny && !failedAny ? UI_TEXT[state.lang].dataLoaded : UI_TEXT[state.lang].dataFallback;
+      render();
+    }
+
     function pickMission(lang) {
       const missions = MISSIONS[lang];
       return missions[Math.floor(Math.random() * missions.length)];
     }
 
-    function getGoalCount(lang) {
-      return lang === "eng" ? 17 : 20;
-    }
-
-    function getResultTier(lang, score) {
-      return RESULT_TIERS[lang].find((tier) => score >= tier.min);
-    }
-
-    function getKorInitial(word) {
-      const code = word.charCodeAt(0) - 44032;
-      if (code < 0 || code > 11171) return "";
-      return ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"][Math.floor(code / 588)];
-    }
-
-    function normalizeAnswer(value) {
-      return state.lang === "eng" ? value.trim().toLowerCase() : value.trim().replace(/\s+/g, "");
-    }
+    function getGoalCount(lang) { return lang === "eng" ? 17 : 20; }
+    function getResultTier(lang, score) { return RESULT_TIERS[lang].find((tier) => score >= tier.min); }
+    function normalizeAnswer(value) { return state.lang === "eng" ? value.trim().toLowerCase() : value.trim().replace(/\s+/g, ""); }
 
     function validateAnswer(rawValue) {
       const answer = normalizeAnswer(rawValue);
       if (!answer) return { ok: false, reason: "wrong" };
-      if (state.lang === "eng" && (!/^[a-z]+$/.test(answer) || !answer.startsWith(state.currentMission))) return { ok: false, reason: "wrong" };
+      if (state.lang === "eng" && (!/^[a-z'-]+$/.test(answer) || !answer.startsWith(state.currentMission))) return { ok: false, reason: "wrong" };
       if (state.lang === "kor" && (!/^[가-힣]+$/.test(answer) || getKorInitial(answer) !== state.currentMission)) return { ok: false, reason: "wrong" };
       if (state.answered.has(answer)) return { ok: false, reason: "duplicate" };
-      if (!state.wordSets[state.lang][state.currentMission].has(answer)) return { ok: false, reason: "wrong" };
+      if (!state.wordSets[state.lang][state.currentMission]?.has(answer)) return { ok: false, reason: "wrong" };
       return { ok: true, answer };
     }
 
@@ -462,6 +315,7 @@
 
     function render() {
       const text = UI_TEXT[state.lang];
+      if (!state.currentMission) state.currentMission = pickMission(state.lang);
       document.documentElement.lang = text.htmlLang;
       document.title = text.title;
       nodes.eyebrow.textContent = text.eyebrow;
@@ -476,7 +330,8 @@
       nodes.goalWarning.textContent = text.goalWarning;
       nodes.timer.textContent = state.timeLeft;
       nodes.score.textContent = state.score;
-      nodes.startBtn.textContent = state.running || state.score > 0 || state.timeLeft < 60 ? text.restart : text.start;
+      nodes.startBtn.textContent = state.dataReady ? (state.running || state.score > 0 || state.timeLeft < 60 ? text.restart : text.start) : text.loading;
+      nodes.startBtn.disabled = !state.dataReady;
       nodes.answerInput.placeholder = state.running ? text.placeholderPlay : text.placeholderReady;
       nodes.answerInput.disabled = !state.running;
       nodes.submitBtn.disabled = !state.running;
@@ -488,9 +343,7 @@
       nodes.engBtn.className = langButtonClass(state.lang === "eng");
     }
 
-    function langButtonClass(active) {
-      return `rounded-full px-4 py-2 text-sm font-black transition ${active ? "bg-white text-slate-950" : "text-white/58 hover:text-white"}`;
-    }
+    function langButtonClass(active) { return `rounded-full px-4 py-2 text-sm font-black transition ${active ? "bg-white text-slate-950" : "text-white/58 hover:text-white"}`; }
 
     function resetGame(clearFeedback = true) {
       stopTimer();
@@ -502,10 +355,11 @@
       nodes.answerInput.value = "";
       nodes.resultModal.classList.add("hidden");
       nodes.resultModal.classList.remove("flex");
-      if (clearFeedback) nodes.feedback.textContent = UI_TEXT[state.lang].idle;
+      if (clearFeedback) nodes.feedback.textContent = state.dataReady ? UI_TEXT[state.lang].idle : UI_TEXT[state.lang].loading;
     }
 
     function startGame() {
+      if (!state.dataReady) return;
       resetGame(false);
       state.currentMission = pickMission(state.lang);
       state.running = true;
@@ -520,18 +374,8 @@
       }, 160);
     }
 
-    function stopTimer() {
-      if (state.timerId) window.clearInterval(state.timerId);
-      state.timerId = null;
-    }
-
-    function finishGame() {
-      stopTimer();
-      state.running = false;
-      state.timeLeft = 0;
-      render();
-      showResult();
-    }
+    function stopTimer() { if (state.timerId) window.clearInterval(state.timerId); state.timerId = null; }
+    function finishGame() { stopTimer(); state.running = false; state.timeLeft = 0; render(); showResult(); }
 
     function showResult() {
       const tier = getResultTier(state.lang, state.score);
@@ -549,10 +393,7 @@
       if (!state.running) return;
       const result = validateAnswer(nodes.answerInput.value);
       nodes.answerInput.value = "";
-      if (!result.ok) {
-        rejectInput(result.reason);
-        return;
-      }
+      if (!result.ok) { rejectInput(result.reason); return; }
       state.answered.add(result.answer);
       state.score += 1;
       nodes.score.textContent = state.score;
@@ -573,36 +414,11 @@
       const shareUrl = new URL(window.location.href);
       shareUrl.searchParams.set("lang", state.lang);
       const text = `${UI_TEXT[state.lang].title}: ${state.score}점`;
-
       if (navigator.share) {
-        await navigator.share({
-          title: UI_TEXT[state.lang].title,
-          text,
-          url: shareUrl.href
-        }).catch(() => {});
+        await navigator.share({ title: UI_TEXT[state.lang].title, text, url: shareUrl.href }).catch(() => {});
         return;
       }
-
       await copyResultLink();
-
-      /*
-        KakaoTalk share guide:
-        1. Include Kakao SDK in production:
-           <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"><\/script>
-        2. Initialize once:
-           Kakao.init("YOUR_JAVASCRIPT_KEY");
-        3. Replace this fallback with:
-           Kakao.Share.sendDefault({
-             objectType: "feed",
-             content: {
-               title: UI_TEXT[state.lang].title,
-               description: text,
-               imageUrl: "https://your-domain.com/share-image.png",
-               link: { mobileWebUrl: shareUrl.href, webUrl: shareUrl.href }
-             },
-             buttons: [{ title: "Play", link: { mobileWebUrl: shareUrl.href, webUrl: shareUrl.href } }]
-           });
-      */
     }
 
     async function copyResultLink() {
@@ -632,6 +448,7 @@
 
     resetGame();
     setLanguage(state.lang, false);
+    loadWordData();
   </script>
 </body>
 </html>
